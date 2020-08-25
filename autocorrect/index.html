@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ⚡>
+<head>
+  <meta charset="utf-8">
+  <title>Letter Inventory</title>
+  <link rel="canonical" href=".">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <meta name="description" content="Autocorrect words.">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <!-- Load AMP web framework -->
+  <link rel="preload" as="script" href="https://cdn.ampproject.org/v0.js">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <!-- Load AMP features for introducing interactivity -->
+  <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+  <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+  <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
+  <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+  <!-- Required AMP boilerplate -->
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <!-- Customize the frontend appearance and layout -->
+  <style amp-custom>
+    * {
+      box-sizing: border-box;
+    }
+    *:focus {
+      outline: 0;
+    }
+    main {
+      margin: 4rem auto;
+      max-width: 100vw;
+      width: 600px;
+    }
+    form {
+      position: relative;
+    }
+    button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      position: absolute;
+      right: 0;
+      top: 0.5em;
+    }
+    p, input {
+      color: #444;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1.25rem;
+      line-height: 1.5;
+      margin: 0;
+      overflow: hidden;
+      padding: 0.5rem 1rem;
+      text-overflow: ellipsis;
+      user-select: none;
+      white-space: nowrap;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!--
+      amp-form#action-xhr: https://amp.dev/documentation/components/amp-form/#action-xhr
+        action-xhr="random" sets the API endpoint to /random.
+
+      amp-events#form: https://amp.dev/documentation/guides-and-tutorials/learn/amp-actions-and-events/#form
+        on="submit-success: ..." when the random result is returned from the
+          endpoint, assign the global variable s to the result and display
+          the matches list.
+      -->
+    <form
+      method="get"
+      action-xhr="random"
+      on="submit-success: matches.changeToLayoutContainer(), AMP.setState({s: event.response.s}), matches.show"
+    >
+      <button type="submit">⚡</button>
+    </form>
+    <!--
+      amp-events#input: https://amp.dev/documentation/guides-and-tutorials/learn/amp-actions-and-events/#input-elements
+        on="input-throttled: ..." when typing, assign the global variable s to
+          the value of the textbox and display the matches list.
+
+      amp-bind: https://amp.dev/documentation/components/amp-bind/?format=websites#usage
+        [value]="s || ''" whenever the global variable s changes, update the
+          value of the textbox to reflect the change.
+         -->
+    <input
+      type="text"
+      name="input"
+      on="input-throttled: matches.changeToLayoutContainer(), AMP.setState({s: event.value}), matches.show"
+      placeholder="Did you mean..."
+      [value]="s || ''"
+    >
+    <!--
+      amp-list: https://amp.dev/documentation/components/amp-list/?format=websites#usage
+        layout="nodisplay" this list of matches starts empty, so not displayed.
+
+      amp-bind: https://amp.dev/documentation/components/amp-bind/?format=websites#usage
+        [src]="'query?s=' + (s || '')" whenever the global variable s changes,
+          call the /query endpoint passing the updated value of s.
+      -->
+    <amp-list
+      layout="nodisplay"
+      [src]="'query?s=' + (s || '')"
+      id="matches"
+    >
+      <!--
+        amp-mustache: https://amp.dev/documentation/components/amp-mustache/#usage
+          List of matches is displayed according to this template.
+        -->
+      <template type="amp-mustache">
+        <p>{{.}}</p>
+      </template>
+      <!--
+        amp-list#placeholder: https://amp.dev/documentation/components/amp-list/?format=websites#placeholder-and-fallback
+          Placeholder element shown while waiting for results to load.
+        -->
+      <p placeholder>⋯</p>
+    </amp-list>
+  </main>
+</body>
+</html>
